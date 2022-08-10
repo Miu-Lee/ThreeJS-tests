@@ -29,6 +29,7 @@ window.addEventListener('resize', ()=>{
     camera.updateProjectionMatrix()
     //update renderer
     renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 //camera
@@ -59,6 +60,16 @@ let time = Date.now()//current timestamp
 
 //gsap
 //gsap.to(mesh.position, {duration: 1, delay: 2, x:1.5})
+
+//fullsize window
+window.addEventListener('dblclick', ()=>{
+    if(!document.fullscreenElement){
+        canvas.requestFullscreen()
+    }
+    else{
+        document.exitFullscreen()
+    }
+})
 
 
 //animate
