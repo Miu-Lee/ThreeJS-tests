@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import GUI from 'lil-gui'
 
 //scene
 const scene = new THREE.Scene()
@@ -13,6 +14,24 @@ const geometry = new THREE.BoxGeometry(1,1,1)
 const material = new THREE.MeshBasicMaterial( {color: 'blue'} )
 const mesh = new THREE.Mesh(geometry,material)
 scene.add(mesh)
+
+//GUI
+const gui = new GUI({close: true})
+gui.add(mesh.rotation, 'y').min(0).max(Math.PI*2).step(Math.PI/10).name('Rotation')
+gui.add(mesh, 'visible')
+gui.add(material, 'wireframe')
+const parameters = {
+    color: '',
+    spin: ()=>{
+        gsap.to(mesh.rotation, {duration:1, y: mesh.rotation.y + Math.PI*2})
+    }
+}
+gui
+.addColor(parameters, 'color')
+.onChange(() =>{
+    material.color.set(parameters.color)
+})
+gui.add(parameters, 'spin')
 
 //Viewport Size
 const sizes = {
@@ -31,6 +50,11 @@ window.addEventListener('resize', ()=>{
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
+
+//light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+scene.add(ambientLight)
+
 
 //camera
 const camera = new THREE.PerspectiveCamera(
@@ -62,14 +86,14 @@ let time = Date.now()//current timestamp
 //gsap.to(mesh.position, {duration: 1, delay: 2, x:1.5})
 
 //fullsize window
-window.addEventListener('dblclick', ()=>{
-    if(!document.fullscreenElement){
-        canvas.requestFullscreen()
-    }
-    else{
-        document.exitFullscreen()
-    }
-})
+// window.addEventListener('dblclick', ()=>{
+//     if(!document.fullscreenElement){
+//         canvas.requestFullscreen()
+//     }
+//     else{
+//         document.exitFullscreen()
+//     }
+// })
 
 
 //animate
